@@ -32,11 +32,13 @@ public class Intervals {
         String[] degrees = new String[]{"C", "D", "E", "F", "G", "A", "B"};
 
         int semitonesCount = 0;
-
         int degreeStepsCount = Integer.parseInt(args[0].substring(1));
 
         int rightDegreeIndex = 0;
         int rightDegreeIndexDsc = 0;
+
+        boolean descending = args.length == 3 && args[2].equals("dsc");
+
 
         // Looking for degree right index. If degreeEndPointIndex out of boundary, move it to the beginning
         for (int i = 0; i < degrees.length; i++) {
@@ -56,7 +58,7 @@ public class Intervals {
 
         int intervalLeftIndex = 0;
 
-        // left interval index lookup in notes
+        // left note index lookup
         for (int i = 0; i < notes.length; i++) {
             String[] splittedNote = notes[i].split("/");
             for (String note : splittedNote) {
@@ -71,6 +73,11 @@ public class Intervals {
         int rightNoteIndex = (intervalLeftIndex + semitonesCount) % notes.length;
         int rightNoteIndexDsc = ((intervalLeftIndex - semitonesCount) + notes.length) % notes.length;
 
+        if(descending) {
+            rightNoteIndex = rightNoteIndexDsc;
+            rightDegreeIndex = rightDegreeIndexDsc;
+        }
+
         //Splitting notes
         String[] rightNote = notes[rightNoteIndex].split("/");
         String result = null;
@@ -84,6 +91,10 @@ public class Intervals {
     }
 
     public static String intervalIdentification(String[] args) {
+
+
+
+
         /*
         input:
         Cbb Cb C C# C## Dbb Db D D# D## Ebb Eb E E# E## Fbb Fb F F# F## Gbb Gb G G# G## Abb Ab A A# A## Bbb Bb B B# B##
@@ -97,9 +108,6 @@ public class Intervals {
 
         String[] nqotes = new String[]{"C/Dbb/B#", "C#/Db/B##", "D/C##/Ebb", "D#/Eb/Fbb",
         "E/D##/Fb", "F/E#/Gbb", "F#/Gb/E##", "G/F##/Abb", "G#/Ab", "A/G##/Bbb", "A#/Bb/Cbb", "B/Cb/A##"};
-
-
-
          */
         return null;
     }
