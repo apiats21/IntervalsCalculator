@@ -1,19 +1,4 @@
 package com.piatsevich;
-        /*
-        m2 - Minor Second - 1 semitone, 2 degrees <br>
-        M2 - Major Second - 2 semitones, 2 degrees <br>
-        m3 - Minor Third - 3 semitones, 3 degrees <br>
-        M3 - Major Third - 4 semitones, 3 degrees <br>
-        P4 - Perfect Fourth - 5 semitones, 4 degrees <br>
-        P5 - Perfect Fifth - 7 semitones, 5 degrees <br>
-        m6 - Minor Sixth - 8 semitones, 6 degrees <br>
-        M6 - Major Sixth - 9 semitones, 6 degrees <br>
-        m7 - Minor Seventh - 10 semitones, 7 degrees <br>
-        M7 - Major Seventh - 11 semitones, 7 degrees <br>
-        P8 - Perfect Octave - 12 semitones, 8 degrees <br>
-        */
-
-//        args = new String[] {"M2", "C"};
 
 import java.util.stream.IntStream;
 
@@ -42,14 +27,14 @@ public class Intervals {
 
         // Looking for degree right index. If degreeEndPointIndex out of boundary, move it to the beginning
         for (int i = 0; i < degrees.length; i++) {
-            if (degrees[i].equals(args[1].substring(0,1))) {
+            if (degrees[i].equals(args[1].substring(0, 1))) {
                 rightDegreeIndex = (i + degreeStepsCount) % degrees.length - 1;
                 rightDegreeIndexDsc = ((i - degreeStepsCount + 1) + degrees.length) % degrees.length;
                 break;
             }
         }
 
-        // semitones count in intervals(return index of interval=NofSemitones)
+        // semitones count in intervals(return index of interval=SemitonesCount)
         semitonesCount = IntStream
                 .range(0, intervals.length)
                 .filter(i -> intervals[i].equals(args[0]))
@@ -73,7 +58,7 @@ public class Intervals {
         int rightNoteIndex = (intervalLeftIndex + semitonesCount) % notes.length;
         int rightNoteIndexDsc = ((intervalLeftIndex - semitonesCount) + notes.length) % notes.length;
 
-        if(descending) {
+        if (descending) {
             rightNoteIndex = rightNoteIndexDsc;
             rightDegreeIndex = rightDegreeIndexDsc;
         }
@@ -92,23 +77,38 @@ public class Intervals {
 
     public static String intervalIdentification(String[] args) {
 
+        String[] intervals = new String[]
+                {"", "m2", "M2", "m3", "M3", "P4", "", "P5", "m6", "M6", "m7", "M7", "P8"};
 
+        // all possible notes combinations
+        String[] notes = new String[]{"C/Dbb/B#", "C#/Db/B##", "D/C##/Ebb", "D#/Eb/Fbb",
+                "E/D##/Fb", "F/E#/Gbb", "F#/Gb/E##", "G/F##/Abb", "G#/Ab", "A/G##/Bbb", "A#/Bb/Cbb", "B/Cb/A##"};
 
+        boolean descending = args.length == 3 && args[2].equals("dsc");
 
-        /*
-        input:
-        Cbb Cb C C# C## Dbb Db D D# D## Ebb Eb E E# E## Fbb Fb F F# F## Gbb Gb G G# G## Abb Ab A A# A## Bbb Bb B B# B##
+        int intervalLeftIndex = 0;
+        int intervalRightIndex = 0;
 
-        return:
-        m2 M2 m3 M3 P4 P5 m6 M6 m7 M7 P8
+        // left & right note index lookup
+        for (int i = 0; i < notes.length; i++) {
+            String[] splittedNote = notes[i].split("/");
+            for (String note : splittedNote) {
+                if (note.equals(args[0])) {
+                    intervalLeftIndex = i;
+                }
+                if (note.equals(args[1])) {
+                    intervalRightIndex = i;
+                }
+            }
+        }
 
-        ['C#', 'Fb'] - find an ascending interval between C# and Fb <br>
-        ['A', 'G#', 'asc'] - find an ascending interval between A and G# <br
+        int semitonesCount = ((intervalRightIndex - intervalLeftIndex) + notes.length) % notes.length;
+        int semitonesCountDes = ((intervalLeftIndex - intervalRightIndex) + notes.length) % notes.length;
 
+        if (descending) {
+            return intervals[semitonesCountDes];
+        }
 
-        String[] nqotes = new String[]{"C/Dbb/B#", "C#/Db/B##", "D/C##/Ebb", "D#/Eb/Fbb",
-        "E/D##/Fb", "F/E#/Gbb", "F#/Gb/E##", "G/F##/Abb", "G#/Ab", "A/G##/Bbb", "A#/Bb/Cbb", "B/Cb/A##"};
-         */
-        return null;
+        return intervals[semitonesCount];
     }
 }
